@@ -28,7 +28,7 @@ class Ingredient(Base):
 
     id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
     unit_id:Mapped[int] = mapped_column(ForeignKey("unit.id"), nullable=False)
-    name:Mapped[str] = mapped_column(String(50), nullable=False)
+    name:Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     price:Mapped[float] = mapped_column(Float, nullable=False)
     quantity:Mapped[int] = mapped_column(Integer, nullable=False)
     created_at:Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False)
