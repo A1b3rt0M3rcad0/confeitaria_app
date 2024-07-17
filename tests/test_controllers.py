@@ -1,0 +1,59 @@
+from controllers.controllers import UnitController
+from models.models import Base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import unittest
+
+def create_test_engine():
+
+    return create_engine('sqlite:///:memory:')
+
+class ControllersTestCase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        # Cria um banco de dados em memória para testes
+        cls.engine = create_engine('sqlite:///:memory:')
+        Base.metadata.create_all(cls.engine)
+        cls.Session = sessionmaker(bind=cls.engine)
+    
+    @classmethod
+    def tearDownClass(cls):
+        # Destroi o banco de dados em memória após os testes
+        Base.metadata.drop_all(cls.engine)
+
+    def setUp(self):
+        self.session = self.Session()
+
+    def tearDown(self):
+        self.session.close()
+    
+    # Unit Controller
+    def test_create_select_unit_controller(self):
+        unit_name = 'kg'
+        UnitController(engine=self.engine).create(name=unit_name)
+        r = UnitController(engine=self.engine).select(name=[unit_name])
+        self.assertEqual(r[0].name, unit_name)
+    
+    def test_multi_select_unit_controller(self):
+        unit_names = ['ab', 'ac', 'ad']
+        for unit_name in unit_names:
+            UnitController(engine=self.engine).create(name=unit_name)
+        r = UnitController(engine=self.engine).select(name=unit_names)
+        for i in range(3):
+            self.assertEqual(r[i].name, unit_names[i])
+    
+    def test_delete_unit_controller(self):
+        unit_name = ['af']
+        UnitController(engine=self.engine).create(name=unit_name[0])
+        r = UnitController(engine=self.engine).select(name=unit_name)
+        UnitController(engine = self.engine).delete(r[0])
+        t = UnitController(engine=self.engine).select(name=unit_name)
+        self.assertEqual(t, [])
+
+    def test_update_unit_controller(self):
+        unit_name = ['af']
+        UnitController(engine=self.engine).create(name=unit_name[0])
+        UnitController(engine=self.engine).update(column_updates={'name':'50'}, name='af')
+        t = UnitController(engine=self.engine).select(name=['50'])
+        self.assertEqual(t[0].name, '50')
