@@ -8,3 +8,9 @@ class UnitController(BaseController):
     def __init__(self, engine=engine()) -> None:
         super().__init__(engine=engine)
         self.model = Unit
+
+class IngredientController(BaseController):
+
+    def __init__(self, engine=engine()) -> None:
+        super().__init__(engine=engine)
+        self.model = Ingredient

@@ -1,4 +1,4 @@
-from controllers.controllers import UnitController
+from controllers.controllers import UnitController, IngredientController
 from models.models import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -57,3 +57,16 @@ class ControllersTestCase(unittest.TestCase):
         UnitController(engine=self.engine).update(column_updates={'name':'50'}, name='af')
         t = UnitController(engine=self.engine).select(name=['50'])
         self.assertEqual(t[0].name, '50')
+    
+    # Ingredient Controller
+    def test_create_select_ingredient_controller(self):
+        ingredient_name = 'ingredient_test'
+        ingredient_price = 5.55
+        ingredient_quantity = 2.5
+        unit_name = ['kg_teste']
+        UnitController(engine=self.engine).create(name=unit_name[0])
+        result_unit = UnitController(engine=self.engine).select(name=unit_name)
+        id = result_unit[0].id
+        IngredientController(engine=self.engine).create(name=ingredient_name, price=ingredient_price, quantity=ingredient_quantity, unit=result_unit[0])
+        result_ingredient = IngredientController(engine=self.engine).select(unit_id=[id])
+        self.assertEqual(result_ingredient[0].name, ingredient_name)
