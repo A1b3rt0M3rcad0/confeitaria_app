@@ -92,7 +92,6 @@ class ModelsTestCase(unittest.TestCase):
         self.assertEqual(retrieved_invoice.client_name, invoice.client_name)
     
     ## ProductInvoice Model
-
     def test_create_product_invoice(self):
         invoice = Invoice(client_name='invoice_name', client_phone='phone_number', total_price=450.52)
         recipe = Recipe(name='recipe_test_product_name')
