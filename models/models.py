@@ -45,7 +45,9 @@ class Recipe(Base):
     name:Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     created_at:Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False, onupdate=func.now())
 
+    # Relations
     recipe_ingredients:Mapped[List["RecipeIngredient"]] = relationship("RecipeIngredient", back_populates="recipe", cascade="all, delete-orphan")
+    products:Mapped[List["Product"]] = relationship("Product", back_populates="recipe", cascade="all, delete-orphan")
 
 
 class RecipeIngredient(Base):
@@ -57,5 +59,18 @@ class RecipeIngredient(Base):
     recipe_id:Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=False)
     quantity:Mapped[float] = mapped_column(Float, nullable=False)
 
+    # Relations
     recipe:Mapped["Recipe"] = relationship("Recipe", back_populates="recipe_ingredients")
     ingredient:Mapped["Ingredient"] = relationship("Ingredient", back_populates="recipe_ingredients")
+
+class Product(Base):
+
+    __tablename__ = 'product'
+
+    id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
+    recipe_id = mapped_column(ForeignKey("recipe.id"), unique=True,  nullable=False)
+    price:Mapped[float] = mapped_column(Float, nullable=False)
+    created_at:Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False, onupdate=func.now())
+
+    # Relations
+    recipe:Mapped["Recipe"] = relationship("Recipe", back_populates="products")

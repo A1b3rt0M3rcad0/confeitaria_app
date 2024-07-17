@@ -2,7 +2,7 @@ import unittest
 from models.models import Unit, Ingredient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models.models import Base, Unit, Recipe, RecipeIngredient
+from models.models import Base, Unit, Recipe, RecipeIngredient, Product
 
 class ModelsTestCase(unittest.TestCase):
 
@@ -67,3 +67,15 @@ class ModelsTestCase(unittest.TestCase):
         self.session.commit()
         retrieved_recipe_ingredient = self.session.query(RecipeIngredient).filter_by(recipe=recipe).one()
         self.assertEqual(retrieved_recipe_ingredient.quantity, recipe_ingredient.quantity)
+    
+    ## Product Model
+    def test_create_product(self):
+
+        recipe = Recipe(name='recipe_test_product')
+        product = Product(recipe=recipe, price=10)
+
+        self.session.add_all([recipe, product])
+        self.session.commit()
+
+        retrieved_product = self.session.query(Product).filter_by(recipe=recipe).one()
+        self.assertEqual(retrieved_product.price, product.price)
