@@ -70,3 +70,18 @@ class ControllersTestCase(unittest.TestCase):
         IngredientController(engine=self.engine).create(name=ingredient_name, price=ingredient_price, quantity=ingredient_quantity, unit=result_unit[0])
         result_ingredient = IngredientController(engine=self.engine).select(unit_id=[id])
         self.assertEqual(result_ingredient[0].name, ingredient_name)
+    
+    def test_multi_select_ingredient_controller(self):
+        ingredient_name = 'ingredient_test8'
+        ingredient_price = 5.55
+        ingredient_quantity = 2.5
+        unit_controller = UnitController(engine=self.engine)
+        ingredient_controller = IngredientController(engine=self.engine)
+        unit_name = ['kg009']
+        unit_controller.create(name=unit_name[0])
+        unit = unit_controller.select(name=unit_name)
+        id = unit[0].id
+        ingredient_controller.create(unit=unit[0], name=ingredient_name, price=ingredient_price, quantity=ingredient_quantity)
+        ingredient = ingredient_controller.select(unit_id=[id], name=[ingredient_name])
+        self.assertEqual(ingredient[0].name, ingredient_name)
+        
