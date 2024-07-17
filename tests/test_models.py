@@ -2,7 +2,7 @@ import unittest
 from models.models import Unit, Ingredient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models.models import Base, Unit, Recipe, RecipeIngredient, Product
+from models.models import Base, Unit, Recipe, RecipeIngredient, Product, Invoice
 
 class ModelsTestCase(unittest.TestCase):
 
@@ -79,3 +79,14 @@ class ModelsTestCase(unittest.TestCase):
 
         retrieved_product = self.session.query(Product).filter_by(recipe=recipe).one()
         self.assertEqual(retrieved_product.price, product.price)
+    
+    ## Invoice Model
+    def test_create_invoice(self):
+
+        invoice = Invoice(client_name='Alberto', client_phone='numero_celular', total_price=450.52)
+        self.session.add_all([invoice])
+        self.session.commit()
+
+        retrieved_invoice = self.session.query(Invoice).filter_by(client_name='Alberto').one()
+
+        self.assertEqual(retrieved_invoice.client_name, invoice.client_name)
