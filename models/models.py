@@ -74,12 +74,30 @@ class Product(Base):
 
     # Relations
     recipe:Mapped["Recipe"] = relationship("Recipe", back_populates="products")
+    product_invoices:Mapped[List["ProductInvoice"]] = relationship("ProductInvoice", back_populates="product", cascade="all, delete-orphan")
 
 class Invoice(Base):
 
     __tablename__ = "invoice"
+
     id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
     client_name:Mapped[str] = mapped_column(String(50), nullable=False)
     client_phone:Mapped[str] = mapped_column(String(30), nullable=False)
     total_price:Mapped[float] = mapped_column(Float, nullable=False)
     created_at:Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False, onupdate=func.now())
+
+    # Relations
+    product_invoices:Mapped[List["ProductInvoice"]] = relationship("ProductInvoice", back_populates="invoice", cascade="all, delete-orphan")
+
+
+class ProductInvoice(Base):
+
+    __tablename__ = 'product_invoice'
+
+    id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
+    product_id:Mapped[int] = mapped_column(ForeignKey("product.id"), nullable=False)
+    invoice_id:Mapped[int] = mapped_column(ForeignKey("invoice.id"), nullable=False)
+
+    ## Relations
+    invoice:Mapped[Invoice] = relationship("Invoice", back_populates="product_invoices")
+    product:Mapped[Product] = relationship("Product", back_populates="product_invoices")
