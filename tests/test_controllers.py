@@ -100,5 +100,17 @@ class ControllersTestCase(unittest.TestCase):
         ingredient_controller.delete(ingredient[0])
         ingredient = ingredient_controller.select(unit_id=[id], name=[ingredient_name])
         self.assertEqual(ingredient, [])
+    
+    def test_update_ingredient_controller(self):
+        ingredient_name = 'ingredient_t21est8'
+        ingredient_price = 5.55
+        ingredient_quantity = 2.5
+        unit_name = ['kg008009']
+        UnitController(engine=self.engine).create(name=unit_name[0])
+        r = UnitController(engine=self.engine).select(name=unit_name)
+        IngredientController(engine=self.engine).create(name=ingredient_name, price=ingredient_price, quantity=ingredient_quantity, unit=r[0])
+        IngredientController(engine=self.engine).update(column_updates={'name':'190'}, name=ingredient_name)
+        t = IngredientController(engine=self.engine).select(name=['190'])
+        self.assertEqual(t[0].name, '190')
 
         
