@@ -4,10 +4,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import unittest
 
-def create_test_engine():
-
-    return create_engine('sqlite:///:memory:')
-
 class ControllersTestCase(unittest.TestCase):
 
     @classmethod
