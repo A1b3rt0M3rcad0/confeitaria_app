@@ -111,8 +111,11 @@ class ControllersTestCase(unittest.TestCase):
 
     # Recipe Controller
     def test_create_select_recipe_controller(self):
-        pass
-    
+        recipe_name = 'recipe_test_name'
+        RecipeController(engine=self.engine).create(name=recipe_name)
+        r = RecipeController(engine=self.engine).select(name=[recipe_name])
+        self.assertEqual(r[0].name, recipe_name)
+
     def test_multi_select_recipe_controller(self):
         pass
 

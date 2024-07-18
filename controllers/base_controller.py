@@ -1,4 +1,5 @@
 from models.models import Base
+from typing import List
 from database.engine import engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select as sqlalchemy_select
@@ -13,7 +14,7 @@ class BaseController:
             s.add_all([self.model(**kwargs)])
             s.commit()
 
-    def select(self, **kwargs) -> list:
+    def select(self, **kwargs:List[any]) -> list:
 
         with Session(self.engine) as s:
             stmt = sqlalchemy_select(self.model).where(getattr(self.model, list(kwargs.keys())[0]).in_(list(kwargs.values())[0]))
