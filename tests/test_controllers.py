@@ -1,4 +1,4 @@
-from controllers.controllers import UnitController, IngredientController
+from controllers.controllers import UnitController, IngredientController, RecipeController, RecipeIngredientController, ProductController, InvoiceController, ProductInvoiceController
 from models.models import Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -109,4 +109,67 @@ class ControllersTestCase(unittest.TestCase):
         t = IngredientController(engine=self.engine).select(name=['190'])
         self.assertEqual(t[0].name, '190')
 
-        
+    # Recipe Controller
+    def test_create_select_recipe_controller(self):
+        pass
+    
+    def test_multi_select_recipe_controller(self):
+        pass
+
+    def test_delete_recipe_controller(self):
+        pass
+
+    def test_update_recipe_controller(self):
+        pass
+
+    # Recipe Ingredient Controller
+    def test_create_select_recipe_ingredient_controller(self):
+        pass
+
+    def test_multi_select_recipe_ingredient_controller(self):
+        pass
+
+    def test_delete_recipe_ingredient_controller(self):
+        pass
+
+    def test_update_recipe_ingredient_controller(self):
+        pass
+
+    # Product Controller
+    def test_create_select_product_controller(self):
+        pass
+    
+    def test_multi_select_product_controller(self):
+        pass
+
+    def test_delete_product_controller(self):
+        pass
+
+    def test_update_product_controller(self):
+        pass
+
+    # Invoice Controller
+    def test_create_select_invoice_controller(self):
+        pass
+    
+    def test_multi_select_invoice_controller(self):
+        pass
+
+    def test_delete_invoice_controller(self):
+        pass
+
+    def test_update_invoice_controller(self):
+        pass
+
+    # Product Invoice Controller
+    def test_create_select_product_invoice_controller(self):
+        pass
+    
+    def test_multi_select_product_invoice_controller(self):
+        pass
+
+    def test_delete_product_invoice_controller(self):
+        pass
+
+    def test_update_product_invoice_controller(self):
+        pass
