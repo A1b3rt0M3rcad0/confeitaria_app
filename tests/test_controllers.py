@@ -20,6 +20,8 @@ class ControllersTestCase(unittest.TestCase):
 
     def setUp(self):
         self.session = self.Session()
+        self.product_controller = ProductController(engine=self.engine)
+        self.recipe_controller = RecipeController(engine=self.engine)
 
     def tearDown(self):
         self.session.close()
@@ -219,7 +221,14 @@ class ControllersTestCase(unittest.TestCase):
 
     # Product Controller
     def test_create_select_product_controller(self):
-        pass
+        recipe_name = ['jnsadof91n2jk3h']
+        product = {'price': 10.50}
+        self.recipe_controller.create(name=recipe_name[0])
+        recipe = self.recipe_controller.select(name=recipe_name)
+        recipe_id = [recipe[0].id]
+        self.product_controller.create(**product, recipe=recipe[0])
+        _product = self.product_controller.select(recipe_id=recipe_id)
+        self.assertEqual(_product[0].price, product['price'])
 
     def test_delete_product_controller(self):
         pass
