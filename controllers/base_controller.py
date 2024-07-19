@@ -2,7 +2,7 @@ import logging
 from config.settings import Config
 from models.models import Base
 from typing import List
-from database.engine import engine
+from sqlalchemy import Engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select as sqlalchemy_select
 from sqlalchemy.exc import IntegrityError, ArgumentError, ProgrammingError
@@ -29,7 +29,7 @@ logger.addHandler(console_handler)
 
 class BaseController:
 
-    def __init__(self, engine=engine) -> None:
+    def __init__(self, engine:Engine) -> None:
         self.engine = engine
 
     def create(self, **kwargs) -> None:
@@ -44,7 +44,6 @@ class BaseController:
             except ProgrammingError:
                 """Quando passamos algo que n pode ser um argumento no sql"""
                 logger.error(f"{self} - {kwargs} incompatible argument")
-                pass
 
     def select(self, **kwargs:List[any]) -> list:
 
