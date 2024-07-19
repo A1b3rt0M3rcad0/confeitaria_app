@@ -217,7 +217,6 @@ class ControllersTestCase(unittest.TestCase):
         result = recipe_ingredient_controller.select(recipe_id=[recipe_id], ingredient_id=[ingredient_id])
         self.assertEqual(result[0].quantity, 110)
 
-
     # Product Controller
     def test_create_select_product_controller(self):
         pass

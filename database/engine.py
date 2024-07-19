@@ -5,6 +5,6 @@ from config.settings import Config
 
 def engine() -> Engine:
     
-    eng = create_engine(Config.database_connection, echo=True)
+    eng = create_engine(**Config.database)
 
     return eng
