@@ -12,7 +12,7 @@ logger = logging.getLogger(**Config.logger)
 logger.setLevel(logging.DEBUG)  # Definindo o nível de log
 
 # Criando um manipulador para escrever logs em um arquivo
-file_handler = logging.FileHandler('app.log')
+file_handler = logging.FileHandler(**Config.logger)
 
 # Criando um manipulador para exibir logs no console
 console_handler = logging.StreamHandler()
