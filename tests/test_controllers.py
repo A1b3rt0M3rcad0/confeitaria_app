@@ -22,6 +22,8 @@ class ControllersTestCase(unittest.TestCase):
         self.session = self.Session()
         self.product_controller = ProductController(engine=self.engine)
         self.recipe_controller = RecipeController(engine=self.engine)
+        self.invoice_controller = InvoiceController(engine=self.engine)
+        self.product_invoice_controller = ProductInvoiceController(engine=self.engine)
 
     def tearDown(self):
         self.session.close()
