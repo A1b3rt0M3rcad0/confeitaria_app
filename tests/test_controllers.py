@@ -144,7 +144,28 @@ class ControllersTestCase(unittest.TestCase):
 
     # Recipe Ingredient Controller
     def test_create_select_recipe_ingredient_controller(self):
-        pass
+        unit_controller = UnitController(engine=self.engine)
+        recipe_controller = RecipeController(engine=self.engine)
+        ingredient_controller = IngredientController(engine=self.engine)
+        recipe_ingredient_controller = RecipeIngredientController(engine=self.engine)
+        unit = {'name': 'kggkhas'}
+        recipe = {'name': 'test_recipe_test'}
+        ingredient = {'name': 'ingredient_name_test', 'price': 15.50, 'quantity': 1}
+        recipe_ingredient_quantity = {'quantity': 10}
+        unit_controller.create(**unit)
+        recipe_controller.create(**recipe)
+        selected_unit = unit_controller.select(name=[unit['name']])
+        ingredient_controller.create(**ingredient, unit=selected_unit[0])
+        selected_recipe = recipe_controller.select(name=[recipe['name']])
+        selected_ingredient = ingredient_controller.select(name=[ingredient['name']], price=[ingredient['price']])
+        recipe_ingredient_controller.create(**recipe_ingredient_quantity, recipe=selected_recipe[0], ingredient=selected_ingredient[0])
+        selected_recipe = recipe_controller.select(name=[recipe['name']])
+        selected_ingredient = ingredient_controller.select(name=[ingredient['name']], price=[ingredient['price']])
+        recipe_id = selected_recipe[0].id
+        ingredient_id = selected_ingredient[0].id
+        result = recipe_ingredient_controller.select(recipe_id=[recipe_id], ingredient_id=[ingredient_id])
+        self.assertEqual(len(result), 1)
+        
 
     def test_multi_select_recipe_ingredient_controller(self):
         pass
