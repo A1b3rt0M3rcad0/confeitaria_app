@@ -3,7 +3,7 @@ from typing import List
 from database.engine import engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select as sqlalchemy_select
-from sqlalchemy.exc import IntegrityError, ArgumentError
+from sqlalchemy.exc import IntegrityError, ArgumentError, ProgrammingError
 
 class BaseController:
 
@@ -16,6 +16,10 @@ class BaseController:
                 s.add_all([self.model(**kwargs)])
                 s.commit()
             except IntegrityError:
+                """Quando o registro ja existe"""
+                pass
+            except ProgrammingError:
+                """Quando passamos algo que n pode ser um argumento no sql"""
                 pass
 
     def select(self, **kwargs:List[any]) -> list:
@@ -26,6 +30,10 @@ class BaseController:
                 result = [item for item in s.scalars(stmt)]
                 return result
             except ArgumentError:
+                """Quando o parametro passado para a func não é uma lista"""
+                return []
+            except ProgrammingError:
+                """Quando passamos algo que n pode ser um argumento no sql"""
                 return []
     
     def delete(self, register:Base) -> None:
