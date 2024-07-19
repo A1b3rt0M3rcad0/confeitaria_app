@@ -37,12 +37,13 @@ class BaseController:
             try: 
                 s.add_all([self.model(**kwargs)])
                 s.commit()
+                logger.info(f"{self} - {kwargs} registry created")
             except IntegrityError:
                 """Quando o registro ja existe"""
-                logger.info(f"{self} registry already exists")
+                logger.info(f"{self} - {kwargs} registry already exists")
             except ProgrammingError:
                 """Quando passamos algo que n pode ser um argumento no sql"""
-                logger.error(f"{self} incompatible argument")
+                logger.error(f"{self} - {kwargs} incompatible argument")
                 pass
 
     def select(self, **kwargs:List[any]) -> list:
@@ -51,14 +52,15 @@ class BaseController:
             try:
                 stmt = sqlalchemy_select(self.model).where(getattr(self.model, list(kwargs.keys())[0]).in_(list(kwargs.values())[0]))
                 result = [item for item in s.scalars(stmt)]
+                logger.info(f"{self} - {kwargs} registry found")
                 return result
             except ArgumentError:
                 """Quando o parametro passado para a func não é uma lista"""
-                logger.error(f"{self} passed argument is not an argument list")
+                logger.error(f"{self} - {kwargs} passed argument is not an argument list")
                 return []
             except ProgrammingError:
                 """Quando passamos algo que n pode ser um argumento no sql"""
-                logger.error(f"{self} incompatible argument")
+                logger.error(f"{self} - {kwargs} incompatible argument")
                 return []
     
     def delete(self, register:Base) -> None:
@@ -66,6 +68,7 @@ class BaseController:
         with Session(self.engine) as s:
             s.delete(register)
             s.commit()
+            logger.info(f"{self} - {register} registry deleted")
     
     def update(self, column_updates: dict, **kwargs) -> None:
 
@@ -78,3 +81,4 @@ class BaseController:
                     setattr(register, key, value)
             # 3. Realiza o commit das alterações no banco de dados
             s.commit()
+            logger.info(f"{self} - {registers} registry(is) updated")
