@@ -1,9 +1,10 @@
 
 class Config:
  
-    # SQlAlchemy Connection
+    # SQlAlchemy Connection, Apneas sqlite
+    database_path = "database/confeitaria.db"
     database = {
-        "url": "sqlite:///database/confeitaria.db",
+        "url": f"sqlite:///{database_path}",
         "echo": True
     }
 
