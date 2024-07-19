@@ -165,10 +165,6 @@ class ControllersTestCase(unittest.TestCase):
         ingredient_id = selected_ingredient[0].id
         result = recipe_ingredient_controller.select(recipe_id=[recipe_id], ingredient_id=[ingredient_id])
         self.assertEqual(len(result), 1)
-        
-
-    def test_multi_select_recipe_ingredient_controller(self):
-        pass
 
     def test_delete_recipe_ingredient_controller(self):
         pass
@@ -178,9 +174,6 @@ class ControllersTestCase(unittest.TestCase):
 
     # Product Controller
     def test_create_select_product_controller(self):
-        pass
-    
-    def test_multi_select_product_controller(self):
         pass
 
     def test_delete_product_controller(self):
@@ -192,9 +185,6 @@ class ControllersTestCase(unittest.TestCase):
     # Invoice Controller
     def test_create_select_invoice_controller(self):
         pass
-    
-    def test_multi_select_invoice_controller(self):
-        pass
 
     def test_delete_invoice_controller(self):
         pass
@@ -204,9 +194,6 @@ class ControllersTestCase(unittest.TestCase):
 
     # Product Invoice Controller
     def test_create_select_product_invoice_controller(self):
-        pass
-    
-    def test_multi_select_product_invoice_controller(self):
         pass
 
     def test_delete_product_invoice_controller(self):
