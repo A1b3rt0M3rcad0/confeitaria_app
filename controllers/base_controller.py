@@ -1,9 +1,30 @@
+import logging
 from models.models import Base
 from typing import List
 from database.engine import engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select as sqlalchemy_select
 from sqlalchemy.exc import IntegrityError, ArgumentError, ProgrammingError
+
+# logger
+logger = logging.getLogger('log')
+logger.setLevel(logging.DEBUG)  # Definindo o nível de log
+
+# Criando um manipulador para escrever logs em um arquivo
+file_handler = logging.FileHandler('app.log')
+
+# Criando um manipulador para exibir logs no console
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)  # Todos os logs serão exibidos no console
+
+# Criando um formatador e adicionando-o aos manipuladores
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+console_handler.setFormatter(formatter)
+
+# Adicionando os manipuladores ao logger
+logger.addHandler(file_handler)
+logger.addHandler(console_handler)
 
 class BaseController:
 
@@ -17,9 +38,10 @@ class BaseController:
                 s.commit()
             except IntegrityError:
                 """Quando o registro ja existe"""
-                pass
+                logger.info(f"{self} registry already exists")
             except ProgrammingError:
                 """Quando passamos algo que n pode ser um argumento no sql"""
+                logger.error(f"{self} incompatible argument")
                 pass
 
     def select(self, **kwargs:List[any]) -> list:
@@ -31,9 +53,11 @@ class BaseController:
                 return result
             except ArgumentError:
                 """Quando o parametro passado para a func não é uma lista"""
+                logger.error(f"{self} passed argument is not an argument list")
                 return []
             except ProgrammingError:
                 """Quando passamos algo que n pode ser um argumento no sql"""
+                logger.error(f"{self} incompatible argument")
                 return []
     
     def delete(self, register:Base) -> None:
