@@ -1,4 +1,5 @@
 import logging
+from config.settings import Config
 from models.models import Base
 from typing import List
 from database.engine import engine
@@ -7,7 +8,7 @@ from sqlalchemy import select as sqlalchemy_select
 from sqlalchemy.exc import IntegrityError, ArgumentError, ProgrammingError
 
 # logger
-logger = logging.getLogger('log')
+logger = logging.getLogger(**Config.logger)
 logger.setLevel(logging.DEBUG)  # Definindo o nível de log
 
 # Criando um manipulador para escrever logs em um arquivo

@@ -6,3 +6,8 @@ class Config:
         "url": "sqlite:///database/confeitaria.db",
         "echo": True
     }
+
+    # Logger
+    logger = {
+        'name': 'app.log' 
+    }
