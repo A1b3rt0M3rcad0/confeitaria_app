@@ -233,10 +233,27 @@ class ControllersTestCase(unittest.TestCase):
         self.assertEqual(_product[0].price, product['price'])
 
     def test_delete_product_controller(self):
-        pass
+        recipe_name = ['jnsadoasdf91n2jk3h']
+        product = {'price': 10.50}
+        self.recipe_controller.create(name=recipe_name[0])
+        recipe = self.recipe_controller.select(name=recipe_name)
+        recipe_id = [recipe[0].id]
+        self.product_controller.create(**product, recipe=recipe[0])
+        _product = self.product_controller.select(recipe_id=recipe_id)
+        self.product_controller.delete(_product[0])
+        _product = self.product_controller.select(recipe_id=recipe_id)
+        self.assertEqual(len(_product), 0)
 
     def test_update_product_controller(self):
-        pass
+        recipe_name = ['jnsadosdfasdf91n2jk3h']
+        product = {'price': 10.50}
+        self.recipe_controller.create(name=recipe_name[0])
+        recipe = self.recipe_controller.select(name=recipe_name)
+        recipe_id = [recipe[0].id]
+        self.product_controller.create(**product, recipe=recipe[0])
+        self.product_controller.update(column_updates={'price': 11}, price=10.50)
+        result = self.product_controller.select(recipe_id=recipe_id)
+        self.assertEqual(result[0].price, 11)
 
     # Invoice Controller
     def test_create_select_invoice_controller(self):
