@@ -1,7 +1,7 @@
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy import ForeignKey
 from typing import List
-from sqlalchemy import String, Float, Integer, DateTime, func
+from sqlalchemy import String, Float, Integer, Date, func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -17,7 +17,7 @@ class Unit(Base):
 
     id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
     name:Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
-    created_at:Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False, onupdate=func.now())
+    created_at:Mapped[Date] = mapped_column(Date, default=func.current_date(), nullable=False, onupdate=func.current_date())
 
     ## Relations
     ingredients:Mapped[List["Ingredient"]] = relationship("Ingredient", back_populates='unit', cascade='all, delete-orphan')
@@ -31,7 +31,7 @@ class Ingredient(Base):
     name:Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     price:Mapped[float] = mapped_column(Float, nullable=False)
     quantity:Mapped[int] = mapped_column(Integer, nullable=False)
-    created_at:Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False, onupdate=func.now())
+    created_at:Mapped[Date] = mapped_column(Date, default=func.current_date(), nullable=False, onupdate=func.current_date())
 
     ## Relations
     unit:Mapped["Unit"] = relationship("Unit", back_populates="ingredients")
@@ -43,7 +43,7 @@ class Recipe(Base):
 
     id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
     name:Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
-    created_at:Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False, onupdate=func.now())
+    created_at:Mapped[Date] = mapped_column(Date, default=func.current_date(), nullable=False, onupdate=func.current_date())
 
     # Relations
     recipe_ingredients:Mapped[List["RecipeIngredient"]] = relationship("RecipeIngredient", back_populates="recipe", cascade="all, delete-orphan")
@@ -70,7 +70,7 @@ class Product(Base):
     id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
     recipe_id = mapped_column(ForeignKey("recipe.id"), unique=True,  nullable=False)
     price:Mapped[float] = mapped_column(Float, nullable=False)
-    created_at:Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False, onupdate=func.now())
+    created_at:Mapped[Date] = mapped_column(Date, default=func.current_date(), nullable=False, onupdate=func.current_date())
 
     # Relations
     recipe:Mapped["Recipe"] = relationship("Recipe", back_populates="products")
@@ -84,7 +84,7 @@ class Invoice(Base):
     client_name:Mapped[str] = mapped_column(String(50), nullable=False)
     client_phone:Mapped[str] = mapped_column(String(30), nullable=False)
     total_price:Mapped[float] = mapped_column(Float, nullable=False)
-    created_at:Mapped[DateTime] = mapped_column(DateTime, default=func.now(), nullable=False, onupdate=func.now())
+    created_at:Mapped[Date] = mapped_column(Date, default=func.current_date(), nullable=False, onupdate=func.current_date())
 
     # Relations
     product_invoices:Mapped[List["ProductInvoice"]] = relationship("ProductInvoice", back_populates="invoice", cascade="all, delete-orphan")
