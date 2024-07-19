@@ -191,9 +191,32 @@ class ControllersTestCase(unittest.TestCase):
         recipe_ingredient_controller.delete(result[0])
         result = recipe_ingredient_controller.select(recipe_id=[recipe_id], ingredient_id=[ingredient_id])
         self.assertEqual(len(result), 0)
-        
+
     def test_update_recipe_ingredient_controller(self):
-        pass
+        unit_controller = UnitController(engine=self.engine)
+        recipe_controller = RecipeController(engine=self.engine)
+        ingredient_controller = IngredientController(engine=self.engine)
+        recipe_ingredient_controller = RecipeIngredientController(engine=self.engine)
+        unit = {'name': 'kggksdasdffhas'}
+        recipe = {'name': 'test_recipesasdfdf_test'}
+        ingredient = {'name': 'ingredient_namasasdfdfe_test', 'price': 15.50, 'quantity': 1}
+        recipe_ingredient_quantity = {'quantity': 10}
+        unit_controller.create(**unit)
+        recipe_controller.create(**recipe)
+        selected_unit = unit_controller.select(name=[unit['name']])
+        ingredient_controller.create(**ingredient, unit=selected_unit[0])
+        selected_recipe = recipe_controller.select(name=[recipe['name']])
+        selected_ingredient = ingredient_controller.select(name=[ingredient['name']], price=[ingredient['price']])
+        recipe_ingredient_controller.create(**recipe_ingredient_quantity, recipe=selected_recipe[0], ingredient=selected_ingredient[0])
+        selected_recipe = recipe_controller.select(name=[recipe['name']])
+        selected_ingredient = ingredient_controller.select(name=[ingredient['name']], price=[ingredient['price']])
+        recipe_id = selected_recipe[0].id
+        ingredient_id = selected_ingredient[0].id
+        result = recipe_ingredient_controller.select(recipe_id=[recipe_id], ingredient_id=[ingredient_id])
+        recipe_ingredient_controller.update(column_updates={'quantity': 110}, recipe_id=recipe_id, ingredient_id=ingredient_id)
+        result = recipe_ingredient_controller.select(recipe_id=[recipe_id], ingredient_id=[ingredient_id])
+        self.assertEqual(result[0].quantity, 110)
+
 
     # Product Controller
     def test_create_select_product_controller(self):
