@@ -117,13 +117,30 @@ class ControllersTestCase(unittest.TestCase):
         self.assertEqual(r[0].name, recipe_name)
 
     def test_multi_select_recipe_controller(self):
-        pass
+        recipe_names = ['recipe_test_name_1', 'recipe_test_name_2']
+        recipe_controller = RecipeController(engine=self.engine)
+        for recipe_name in recipe_names:
+            recipe_controller.create(name=recipe_name)
+        r = recipe_controller.select(name=recipe_names)
+        self.assertEqual(len(r), 2)
 
     def test_delete_recipe_controller(self):
-        pass
+        recipe_names = ['recipe_test_name_11', 'recipe_test_name_22']
+        recipe_controller = RecipeController(engine=self.engine)
+        for recipe_name in recipe_names:
+            recipe_controller.create(name=recipe_name)
+        r = recipe_controller.select(name=recipe_names)
+        recipe_controller.delete(register=r[0])
+        s = recipe_controller.select(name=recipe_names)
+        self.assertEqual(len(s), 1)
 
     def test_update_recipe_controller(self):
-        pass
+        recipe_name = ['recipe_test_name_1.1.1']
+        recipe_controller = RecipeController(engine=self.engine)
+        recipe_controller.create(name=recipe_name[0])
+        recipe_controller.update(column_updates={'name': 'recipe_tes2t_00'}, name=recipe_name[0])
+        r = recipe_controller.select(name=['recipe_tes2t_00'])
+        self.assertEqual(r[0].name, 'recipe_tes2t_00')
 
     # Recipe Ingredient Controller
     def test_create_select_recipe_ingredient_controller(self):
