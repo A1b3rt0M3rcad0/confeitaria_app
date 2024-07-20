@@ -5,6 +5,7 @@ from sqlalchemy import Engine
 from sqlalchemy.orm import Session
 from sqlalchemy import select as sqlalchemy_select
 from sqlalchemy.exc import IntegrityError, ArgumentError, ProgrammingError
+from sqlalchemy.orm.exc import UnmappedInstanceError
 
 logger = init_logger()
 
@@ -45,10 +46,14 @@ class BaseController:
     
     def delete(self, register:Base) -> None:
 
-        with Session(self.engine) as s:
-            s.delete(register)
-            s.commit()
-            logger.info(f"{self} - {register} registry deleted")
+        try:
+            with Session(self.engine) as s:
+                s.delete(register)
+                s.commit()
+                logger.info(f"{self} - {register} registry deleted")
+        except UnmappedInstanceError:
+            """Quando a instancia passada não é do tipo Filho de Base"""
+            logger.error(f"{self} - ({register}) passed argument is not a model")
     
     def update(self, column_updates: dict, **kwargs) -> None:
 
