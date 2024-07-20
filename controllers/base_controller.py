@@ -53,12 +53,16 @@ class BaseController:
     def update(self, column_updates: dict, **kwargs) -> None:
 
         with Session(self.engine) as s:
-            # 1. Busca todos os registros que correspondem aos critérios fornecidos em **kwargs
-            registers = s.query(self.model).filter_by(**kwargs).all()
-            # 2. Para cada registro encontrado, atualiza as colunas especificadas em column_updates
-            for register in registers:
-                for key, value in column_updates.items():
-                    setattr(register, key, value)
-            # 3. Realiza o commit das alterações no banco de dados
-            s.commit()
-            logger.info(f"{self} - {registers} registry(is) updated")
+            try:
+                # 1. Busca todos os registros que correspondem aos critérios fornecidos em **kwargs
+                registers = s.query(self.model).filter_by(**kwargs).all()
+                # 2. Para cada registro encontrado, atualiza as colunas especificadas em column_updates
+                for register in registers:
+                    for key, value in column_updates.items():
+                        setattr(register, key, value)
+                # 3. Realiza o commit das alterações no banco de dados
+                s.commit()
+                logger.info(f"{self} - {registers} registry(is) updated")
+            except ProgrammingError:
+                """Quando passamos algo que n pode ser um argumento no sql"""
+                logger.error(f"{self} - {kwargs} incompatible argument")
