@@ -8,4 +8,3 @@ from controllers.controllers import UnitController, IngredientController, Recipe
 if not os.path.exists(Config.database_path):
     Base.metadata.create_all(engine())
 
-UnitController().delete('kg')

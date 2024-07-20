@@ -8,7 +8,13 @@ from sqlalchemy.orm import relationship
 
 
 class Base(DeclarativeBase):
-    pass
+
+    def __repr__(self):
+        primary_key = ', '.join(f"{key}={value!r}" for key, value in self.__dict__.items() if not key.startswith('_'))
+        return f"<{self.__class__.__name__}({primary_key})>"
+    
+    def __str__(self):
+        return self.__repr__()
 
 
 class Unit(Base):
