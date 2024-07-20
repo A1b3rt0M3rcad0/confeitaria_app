@@ -257,20 +257,100 @@ class ControllersTestCase(unittest.TestCase):
 
     # Invoice Controller
     def test_create_select_invoice_controller(self):
-        pass
+        invoice_attrs = {
+            'client_name': '182398172sadf',
+            'client_phone': '109273h12123',
+            'total_price': '192.59'
+        }
+        self.invoice_controller.create(**invoice_attrs)
+        r = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])
+        self.assertEqual(r[0].client_name, invoice_attrs['client_name'])
 
     def test_delete_invoice_controller(self):
-        pass
+        invoice_attrs = {
+            'client_name': '182398172sadf',
+            'client_phone': '109273h12123',
+            'total_price': '192.59'
+        }
+        r = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])
+        self.assertEqual(r[0].client_name, invoice_attrs['client_name'])
+        self.invoice_controller.delete(r[0])
+        r = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])
+        self.assertEqual(len(r), 0)
+
 
     def test_update_invoice_controller(self):
-        pass
+        invoice_attrs = {
+            'client_name': '182398172sadf',
+            'client_phone': '109273h12123',
+            'total_price': '192.59'
+        }
+        self.invoice_controller.create(**invoice_attrs)
+        r = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])
+        self.assertEqual(r[0].client_name, invoice_attrs['client_name'])
+        self.invoice_controller.update(column_updates={'client_name': 'alberto_mercado'}, client_name=invoice_attrs['client_name'])
+        t = self.invoice_controller.select(client_name=["alberto_mercado"])
+        self.assertEqual(t[0].client_phone, r[0].client_phone)
 
     # Product Invoice Controller
     def test_create_select_product_invoice_controller(self):
-        pass
+        # Primeiro, crie as dependências necessárias: receita, produto e fatura
+        recipe_name = 'recipe_test_name'
+        self.recipe_controller.create(name=recipe_name)
+        recipe = self.recipe_controller.select(name=[recipe_name])[0]
+
+        product = {'price': 10.50}
+        self.product_controller.create(price=product['price'], recipe=recipe)
+        recipe = self.recipe_controller.select(name=[recipe_name])[0]
+        created_product = self.product_controller.select(recipe_id=[recipe.id])[0]
+
+        invoice_attrs = {
+            'client_name': 'client_test_name',
+            'client_phone': '123456789',
+            'total_price': 100.0
+        }
+        self.invoice_controller.create(**invoice_attrs)
+        created_invoice = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])[0]
+
+        # Agora, crie a relação product_invoice
+        created_product = self.product_controller.select(recipe_id=[recipe.id])[0]
+        self.product_invoice_controller.create(product=created_product, invoice=created_invoice)
+        created_product = self.product_controller.select(recipe_id=[recipe.id])[0]
+        created_invoice = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])[0]
+        result = self.product_invoice_controller.select(product_id=[created_product.id], invoice_id=[created_invoice.id])
+        self.assertEqual(len(result), 1)
 
     def test_delete_product_invoice_controller(self):
-        pass
+        # Primeiro, crie as dependências necessárias: receita, produto e fatura
+        recipe_name = 'recipe_test_name_delete'
+        self.recipe_controller.create(name=recipe_name)
+        recipe = self.recipe_controller.select(name=[recipe_name])[0]
+
+        product = {'price': 10.50}
+        self.product_controller.create(price=product['price'], recipe=recipe)
+        recipe = self.recipe_controller.select(name=[recipe_name])[0]
+        recipe = self.recipe_controller.select(name=[recipe_name])[0]
+        created_product = self.product_controller.select(recipe_id=[recipe.id])[0]
+
+        invoice_attrs = {
+            'client_name': 'client_test_name_delete',
+            'client_phone': '123456789',
+            'total_price': 100.0
+        }
+        self.invoice_controller.create(**invoice_attrs)
+        created_invoice = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])[0]
+
+        # Crie a relação product_invoice
+        self.product_invoice_controller.create(product=created_product, invoice=created_invoice)
+        created_product = self.product_controller.select(recipe_id=[recipe.id])[0]
+        created_invoice = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])[0]
+        result = self.product_invoice_controller.select(product_id=[created_product.id], invoice_id=[created_invoice.id])
+        self.assertEqual(len(result), 1)
+
+        # Delete a relação product_invoice
+        self.product_invoice_controller.delete(result[0])
+        result = self.product_invoice_controller.select(product_id=[created_product.id], invoice_id=[created_invoice.id])
+        self.assertEqual(len(result), 0)
 
     def test_update_product_invoice_controller(self):
         pass
