@@ -69,5 +69,18 @@ class BaseController:
                 s.commit()
                 logger.info(f"{self} - {registers} registry(is) updated")
             except ProgrammingError:
-                """Quando passamos algo que n pode ser um argumento no sql"""
+                """Quando passamos algo que não pode ser um argumento no sql"""
                 logger.error(f"{self} - {kwargs} incompatible argument")
+    
+    def select_all(self) -> list:
+
+        with Session(self.engine) as s:
+            try:
+                stmt = sqlalchemy_select(self.model)
+                result = [item for item in s.scalars(stmt)]
+                logger.info(f"{self} - all registries found")
+                return result
+            except ProgrammingError:
+                """Quando passamos algo que não pode ser um argumento no sql"""
+                logger.error(f"{self} - incompatible argument")
+                return []

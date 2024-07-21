@@ -20,6 +20,7 @@ class ControllersTestCase(unittest.TestCase):
 
     def setUp(self):
         self.session = self.Session()
+        self.unit_controler = UnitController(engine=self.engine)
         self.product_controller = ProductController(engine=self.engine)
         self.recipe_controller = RecipeController(engine=self.engine)
         self.invoice_controller = InvoiceController(engine=self.engine)
@@ -350,3 +351,16 @@ class ControllersTestCase(unittest.TestCase):
         self.product_invoice_controller.delete(result[0])
         result = self.product_invoice_controller.select(product_id=[created_product.id], invoice_id=[created_invoice.id])
         self.assertEqual(len(result), 0)
+    
+
+    ## Pegando qualquer controller apenas para ver se retorna os valores
+    def test_base_controller_select_all(self):
+
+        self.unit_controler.create(name='klsjd')
+        self.unit_controler.create(name='ashdklf')
+        self.unit_controler.create(name='isaohjdifh')
+
+        all = self.unit_controler.select_all()
+
+        self.assertFalse(len(all) == 0)
+        self.assertEqual(len(all), 3)
