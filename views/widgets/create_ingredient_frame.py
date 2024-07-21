@@ -41,7 +41,7 @@ class CreateIngredientFrame(base.BaseFrame):
         self.units = self.unit_controller.select_all()
         self.units = {unit.name: unit for unit in self.units} if len(self.units) != 0 else []
 
-        self.option_menu_units = base.BaseOptionMenu(self, values = list(self.units.keys()), width=95)
+        self.option_menu_units = base.BaseOptionMenu(self, values = list(self.units.keys()), width=150)
         self.option_menu_units.grid(row=3, column=3, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1])
 
         # Button

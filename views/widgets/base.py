@@ -31,4 +31,4 @@ class BaseOptionMenu(ctk.CTkOptionMenu):
 
     def __init__(self, master=None, **kwargs) -> None:
         super().__init__(master, **kwargs)
-        self.configure(fg_color=Config.colors['hover'], text_color=Config.colors['base'], button_color=Config.colors['hover'],button_hover_color=Config.colors['emphasis'], dropdown_hover_color=Config.colors['emphasis'], dropdown_fg_color=Config.colors['hover'], font=(Config.font, Config.font_sizes['entry']))
+        self.configure(fg_color=Config.colors['hover'], text_color=Config.colors['base'], button_color=Config.colors['hover'],button_hover_color=Config.colors['emphasis'], dropdown_hover_color=Config.colors['emphasis'], dropdown_fg_color=Config.colors['hover'], font=(Config.font, Config.font_sizes['entry']), dropdown_font=(Config.font, Config.font_sizes['entry']))
