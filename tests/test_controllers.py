@@ -329,7 +329,6 @@ class ControllersTestCase(unittest.TestCase):
         product = {'price': 10.50}
         self.product_controller.create(price=product['price'], recipe=recipe)
         recipe = self.recipe_controller.select(name=[recipe_name])[0]
-        recipe = self.recipe_controller.select(name=[recipe_name])[0]
         created_product = self.product_controller.select(recipe_id=[recipe.id])[0]
 
         invoice_attrs = {
@@ -351,6 +350,3 @@ class ControllersTestCase(unittest.TestCase):
         self.product_invoice_controller.delete(result[0])
         result = self.product_invoice_controller.select(product_id=[created_product.id], invoice_id=[created_invoice.id])
         self.assertEqual(len(result), 0)
-
-    def test_update_product_invoice_controller(self):
-        pass
