@@ -14,13 +14,26 @@ class CreateUnitFrame(base.BaseFrame):
         self.unit_controller = UnitController()
         validade_entry_string = (self.register(not_start_with_space), '%S', '%P')
 
-        self.label = base.BaseLabel(self, text='Unidade:')
-        self.label.grid(row=0, column=0, padx=Config.paddings['text'][0], pady=Config.paddings['text'][1])
+        # widgets sizes
+        self.size_label = Config.size_label
+        self.size_entry = Config.size_entry
+        self.size_option_menu = Config.size_option_menu
+        self.size_button = Config.size_button
+
+        # frame sizes
+        self.x_frame_size = self.size_label[0] + self.size_entry[0] + Config.paddings['entry'][0]*2 + Config.paddings['message'][0]*2
+        self.y_frame_size = self.size_entry[1] + self.size_button[1] + Config.paddings['message'][1]*2 + Config.paddings['button'][1]*2
+        self.frame_size = (self.x_frame_size, self.y_frame_size)
+
+        # Entry Namme
+        self.label = base.BaseLabel(self, text='Unidade:', width=self.size_label[0], height=self.size_label[1])
+        self.label.grid(row=0, column=0, padx=Config.paddings['message'][0], pady=Config.paddings['message'][1])
         
-        self.unit_entry = base.BaseEntry(self, placeholder_text='Digite a unidade', validate='key', validatecommand=validade_entry_string, width=150)
+        self.unit_entry = base.BaseEntry(self, placeholder_text='Digite a unidade', validate='key', validatecommand=validade_entry_string, width=self.size_entry[0], height=self.size_entry[1])
         self.unit_entry.grid(row=0, column=1, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1])
 
-        self.button = base.BaseButton(self, text="Criar Unidade", width=0, command=self.__create_unit)
+        # Button
+        self.button = base.BaseButton(self, text="Criar Unidade", command=self.__create_unit, width=self.size_button[0], height=self.size_button[1],)
         self.button.grid(row=1, column=0, columnspan=2, padx=Config.paddings['button'][0], pady=Config.paddings['button'][1])    
 
     def __create_unit(self) -> None:

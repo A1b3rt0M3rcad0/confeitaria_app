@@ -6,6 +6,6 @@ from config.settings import Config
 
 root = ctk.CTk(fg_color=Config.colors['base'])
 root.title('Confeitaria')
-frame = create_ingredient_frame.CreateIngredientFrame(root)
-frame.pack(padx=20, pady=20, fill="both", expand=True)
+frame = create_unit_frame.CreateUnitFrame(root)
+frame.grid(row=0, column=0)
 root.mainloop()

@@ -53,3 +53,8 @@ class Config:
         'text': (10, 10)          # Padding horizontal e vertical para widget de texto (Text)
     }
 
+    # Widgets Sizes
+    size_label = (100, 25)
+    size_entry = (200, 30)
+    size_option_menu = (150, 30)
+    size_button = (100, 30)
