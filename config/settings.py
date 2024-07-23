@@ -55,6 +55,8 @@ class Config:
 
     # Widgets Sizes
     size_label = (100, 25)
+    size_label_unit = (50, 25)
+    size_label_text = (300, 25)
     size_entry = (200, 30)
     size_option_menu = (150, 30)
     size_button = (100, 30)

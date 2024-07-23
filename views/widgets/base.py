@@ -32,3 +32,14 @@ class BaseOptionMenu(ctk.CTkOptionMenu):
     def __init__(self, master=None, **kwargs) -> None:
         super().__init__(master, **kwargs)
         self.configure(fg_color=Config.colors['hover'], text_color=Config.colors['base'], button_color=Config.colors['hover'],button_hover_color=Config.colors['emphasis'], dropdown_hover_color=Config.colors['emphasis'], dropdown_fg_color=Config.colors['hover'], font=(Config.font, Config.font_sizes['entry']), dropdown_font=(Config.font, Config.font_sizes['entry']))
+
+class BaseScrollableFrame(ctk.CTkScrollableFrame):
+
+    def __init__(self, master=None, **kwargs) -> None:
+        super().__init__(master, **kwargs)
+        self.config = {
+            'label_fg_color':Config.colors['hover'],
+            'border_width': 1,
+            'border_color': Config.colors['hover']
+        }
+        self.configure(fg_color=Config.colors['main'], label_text_color=Config.colors['base'], scrollbar_button_color=Config.colors['hover'], scrollbar_button_hover_color=Config.colors['emphasis'], **self.config)
