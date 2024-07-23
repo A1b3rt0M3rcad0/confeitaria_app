@@ -154,7 +154,7 @@ class CreateRecipeFrame(base.BaseFrame):
     
     def __create_recipe(self) -> None:
 
-        recipe_name = self.entry_recipe_name.get().capitalize().ljust()
+        recipe_name = self.entry_recipe_name.get().capitalize()
 
         if len(recipe_name) >= 3:
 
