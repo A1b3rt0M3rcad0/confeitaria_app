@@ -23,8 +23,10 @@ class CreateRecipeFrame(base.BaseFrame):
         validade_entry_string = (self.register(not_start_with_space), '%S', '%P')
 
         # Created ingredient list
-        self.units = {unit.id: unit.name for unit in self.unit_controller.select_all()} if len(self.unit_controller.select_all()) > 0 else []
-        self.ingredients = {ingredient.name: (ingredient.id, ingredient.price, ingredient.quantity, self.units[ingredient.unit_id]) for ingredient in self.ingredient_controller.select_all()} if len(self.ingredient_controller.select_all()) > 0 else []
+        self.all_units = self.unit_controller.select_all()
+        self.all_ingredients = self.ingredient_controller.select_all()
+        self.units = {unit.id: unit.name for unit in self.all_units} if len(self.all_units) > 0 else []
+        self.ingredients = {ingredient.name: (ingredient.id, ingredient.price, ingredient.quantity, self.units[ingredient.unit_id]) for ingredient in self.all_ingredients} if len(self.all_ingredients) > 0 else []
 
         # widgets sizes
         self.size_label = Config.size_label
@@ -182,4 +184,4 @@ class CreateRecipeFrame(base.BaseFrame):
                 messagebox.showerror("Erro", "Por favor, adicione um ingrediente à receita.")
 
         else:
-            messagebox.showinfo("Alerta", "O nome da receita pe muito curto.")
+            messagebox.showinfo("Alerta", "O nome da receita é muito curto.")
