@@ -12,4 +12,6 @@ root.title('Confeitaria')
 # ingredient_frame.grid(row=0, column=1)
 recipe_frame = create_recipe_frame.CreateRecipeFrame(root)
 recipe_frame.grid(row=0, column=2)
+
+root.maxsize(recipe_frame.frame_size[0], recipe_frame.frame_size[1])
 root.mainloop()
