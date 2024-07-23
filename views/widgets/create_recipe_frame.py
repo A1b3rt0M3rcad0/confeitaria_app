@@ -12,7 +12,7 @@ class CreateRecipeFrame(base.BaseFrame):
         super().__init__(master, **kwargs)
         self.ingredient_controller = IngredientController()
         self.recipe_controller = RecipeController()
-        self.recipe_ingredient_controlelr = RecipeIngredientController()
+        self.recipe_ingredient_controller = RecipeIngredientController()
         self.unit_controller = UnitController()
 
         # Store added ingredients
@@ -31,7 +31,7 @@ class CreateRecipeFrame(base.BaseFrame):
         self.size_entry = Config.size_entry
         self.size_option_menu = Config.size_option_menu
         self.size_button = Config.size_button
-        self.ingredient_list = 400
+        self.ingredient_list = Config.width_ingredient_list
 
         # frame sizes
         self.x_frame_size = self.size_label[0]*2 + Config.paddings['entry'][0]*4 + self.ingredient_list + Config.paddings['entry'][0] * 2
@@ -67,7 +67,7 @@ class CreateRecipeFrame(base.BaseFrame):
         # Total Cost
         self.__label_ingredients_total_cost()
 
-        self.button = base.BaseButton(self, text="Criar Receita", width=self.size_button[0], height=self.size_button[1], command=self.__delete_all_infos)
+        self.button = base.BaseButton(self, text="Criar Receita", width=self.size_button[0], height=self.size_button[1], command=self.__create_recipe)
         self.button.grid(row=2, column=1, padx=Config.paddings['button'][0], pady=Config.paddings['button'][1], sticky='sw')
 
 
@@ -151,3 +151,35 @@ class CreateRecipeFrame(base.BaseFrame):
         # Resets Entrys
         self.entry_ingredient_quantity.delete(0, ctk.END)
         self.entry_recipe_name.delete(0, ctk.END)
+    
+    def __create_recipe(self) -> None:
+
+        recipe_name = self.entry_recipe_name.get().capitalize().ljust()
+
+        if len(recipe_name) >= 3:
+
+            if len(self.added_ingredients) >= 1:
+
+                recipe = self.recipe_controller.select(name=[recipe_name])
+
+                if len(recipe) == 0:
+                    self.recipe_controller.create(name=recipe_name)
+                    recipe_id = self.recipe_controller.select(name=[recipe_name])[0].id
+
+                else:
+                    messagebox.showerror("Erro", "Receita já existe.")
+                    return 
+                
+                for ingredient in self.added_ingredients:
+                    ingredient_name = ingredient[0]
+                    ingredient_id = self.ingredients[ingredient_name][0]
+                    self.recipe_ingredient_controller.create(ingredient_id=ingredient_id, recipe_id=recipe_id, quantity=ingredient[1])
+
+                self.__delete_all_infos()
+                messagebox.showinfo("Alerta", f'Receita "{recipe_name}" criada com sucesso.')
+
+            else:
+                messagebox.showerror("Erro", "Por favor, adicione um ingrediente à receita.")
+
+        else:
+            messagebox.showinfo("Alerta", "O nome da receita pe muito curto.")

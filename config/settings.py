@@ -60,3 +60,4 @@ class Config:
     size_entry = (200, 30)
     size_option_menu = (150, 30)
     size_button = (100, 30)
+    width_ingredient_list = 400
