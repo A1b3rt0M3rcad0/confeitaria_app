@@ -34,6 +34,10 @@ class CreateInvoiceFrame(base.BaseFrame):
         # Added Products
         self.added_products = []
 
+        # Recipes
+        self.all_recipes = self.recipe_controller.select_all()
+        self.recipes = {recipe.name: recipe.id for recipe in self.all_recipes} if len(self.all_recipes) > 0 else {'Vazio': None}
+
         # Products
         self.all_products = self.product_controller.select_all()
         __select_recipe = lambda product: self.recipe_controller.select(id=[product.recipe_id])[0]
@@ -83,7 +87,7 @@ class CreateInvoiceFrame(base.BaseFrame):
         self.__label_products_total_cost()
 
         # Button Create Invoice
-        self.button_add_product = base.BaseButton(self, text="Criar Fatura", width=self.size_option_menu[0], height=self.size_option_menu[1])
+        self.button_add_product = base.BaseButton(self, text="Criar Fatura", width=self.size_option_menu[0], height=self.size_option_menu[1], command=self.__create_invoice)
         self.button_add_product.grid(row=3, column=2, padx=Config.paddings['button'][0], pady=Config.paddings['button'][1], sticky='nw')
 
         # Button Create and Print Invoice
@@ -176,3 +180,30 @@ class CreateInvoiceFrame(base.BaseFrame):
         self.product_quantity.delete(0, ctk.END)
         self.entry_client_name.delete(0, ctk.END)
         self.entry_client_phone.delete(0, ctk.END)
+    
+    def __create_invoice(self) -> None:
+        client_name = self.entry_client_name.get()
+        client_phone = self.entry_client_phone.get()
+        total_cost = self.total_cost
+        if client_name == "" or client_phone == "":
+            messagebox.showerror("Erro", "Por favor, insira o nome e telefone do cliente.")
+            return
+        if len(self.added_products) == 0:
+            messagebox.showerror("Erro", "Por favor, adicione algum produto.")
+            return
+        
+        products = []
+
+        for product_name, product_quantity, _ in self.added_products:
+            recipe_id = self.recipes[product_name]
+            product_id = self.product_controller.select(recipe_id=[recipe_id])[0].id
+            products.append((product_id, product_quantity))
+        
+        self.invoice_controller.create(client_name=client_name, client_phone=client_phone, total_price=total_cost)
+        last_invoice_id = self.invoice_controller.select_all()[-1].id
+
+        for product_id, product_quantity in products:
+            self.product_invoice_controller.create(invoice_id = last_invoice_id, product_id=product_id, quantity=product_quantity)
+        
+        messagebox.showinfo("Alerta", "Fatura Criada Com Sucesso")
+        self.__delete_all_infos()
