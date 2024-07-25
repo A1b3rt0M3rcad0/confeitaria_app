@@ -315,7 +315,7 @@ class ControllersTestCase(unittest.TestCase):
 
         # Agora, crie a relação product_invoice
         created_product = self.product_controller.select(recipe_id=[recipe.id])[0]
-        self.product_invoice_controller.create(product=created_product, invoice=created_invoice)
+        self.product_invoice_controller.create(product=created_product, invoice=created_invoice, quantity=10)
         created_product = self.product_controller.select(recipe_id=[recipe.id])[0]
         created_invoice = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])[0]
         result = self.product_invoice_controller.select(product_id=[created_product.id], invoice_id=[created_invoice.id])
@@ -341,7 +341,7 @@ class ControllersTestCase(unittest.TestCase):
         created_invoice = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])[0]
 
         # Crie a relação product_invoice
-        self.product_invoice_controller.create(product=created_product, invoice=created_invoice)
+        self.product_invoice_controller.create(product=created_product, invoice=created_invoice, quantity=10)
         created_product = self.product_controller.select(recipe_id=[recipe.id])[0]
         created_invoice = self.invoice_controller.select(client_name=[invoice_attrs['client_name']])[0]
         result = self.product_invoice_controller.select(product_id=[created_product.id], invoice_id=[created_invoice.id])

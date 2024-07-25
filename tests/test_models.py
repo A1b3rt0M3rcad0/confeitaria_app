@@ -96,7 +96,7 @@ class ModelsTestCase(unittest.TestCase):
         invoice = Invoice(client_name='invoice_name', client_phone='phone_number', total_price=450.52)
         recipe = Recipe(name='recipe_test_product_name')
         product = Product(recipe=recipe, price=10)
-        product_invoice = ProductInvoice(product = product, invoice = invoice)
+        product_invoice = ProductInvoice(product = product, invoice = invoice, quantity=10)
 
         self.session.add_all([invoice, recipe, product, product_invoice])
         self.session.commit()

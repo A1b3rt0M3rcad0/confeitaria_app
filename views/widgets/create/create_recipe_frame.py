@@ -26,7 +26,7 @@ class CreateRecipeFrame(base.BaseFrame):
         self.all_units = self.unit_controller.select_all()
         self.all_ingredients = self.ingredient_controller.select_all()
         self.units = {unit.id: unit.name for unit in self.all_units} if len(self.all_units) > 0 else []
-        self.ingredients = {ingredient.name: (ingredient.id, ingredient.price, ingredient.quantity, self.units[ingredient.unit_id]) for ingredient in self.all_ingredients} if len(self.all_ingredients) > 0 else []
+        self.ingredients = {ingredient.name: (ingredient.id, ingredient.price, ingredient.quantity, self.units[ingredient.unit_id]) for ingredient in self.all_ingredients} if len(self.all_ingredients) > 0 else {'Vazio': (None, 0, 0, None)}
 
         # widgets sizes
         self.size_label = Config.size_label

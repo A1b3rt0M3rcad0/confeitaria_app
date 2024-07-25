@@ -25,7 +25,7 @@ class CreateProductFrame(base.BaseFrame):
 
         # Recipes
         self.all_recipes = self.recipe_controller.select_all()
-        self.recipes = {recipe.name: recipe.id for recipe in self.all_recipes} if len(self.all_recipes) > 0 else []
+        self.recipes = {recipe.name: recipe.id for recipe in self.all_recipes} if len(self.all_recipes) > 0 else {'Vazio': None}
 
         # frame sizes
         self.x_frame_size = self.size_label[0] + self.size_entry[0] + Config.paddings['entry'][0]*4

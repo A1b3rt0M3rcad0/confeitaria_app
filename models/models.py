@@ -103,6 +103,7 @@ class ProductInvoice(Base):
     id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
     product_id:Mapped[int] = mapped_column(ForeignKey("product.id"), nullable=False)
     invoice_id:Mapped[int] = mapped_column(ForeignKey("invoice.id"), nullable=False)
+    quantity:Mapped[float] = mapped_column(Integer, nullable=False)
 
     ## Relations
     invoice:Mapped[Invoice] = relationship("Invoice", back_populates="product_invoices")
