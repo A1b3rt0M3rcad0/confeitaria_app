@@ -9,4 +9,8 @@ root = ctk.CTk(fg_color=Config.colors['base'])
 root.title('Confeitaria')
 frame = create_invoice_frame.CreateInvoiceFrame(root)
 frame.grid()
+
+root.maxsize(frame.frame_size[0], frame.frame_size[1])
+root.minsize(frame.frame_size[0], frame.frame_size[1])
+
 root.mainloop()

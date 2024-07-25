@@ -27,8 +27,8 @@ class CreateInvoiceFrame(base.BaseFrame):
         self.ingredient_list = Config.width_ingredient_list
 
         # frame sizes
-        self.x_frame_size = self.size_label[0] + self.size_entry[0] + Config.paddings['entry'][0]*4
-        self.y_frame_size = self.size_label[1]*2 + self.size_entry[1]*2 + self.size_button[1] + Config.paddings['entry'][1]*8 + Config.paddings['button'][1]*2
+        self.x_frame_size = self.size_label[0] + self.size_entry[0] + self.size_option_menu[0] + Config.paddings['entry'][0]*4 + Config.paddings['message'][0]*2 - 25
+        self.y_frame_size = self.size_label[1]*2 + Config.paddings['entry'][1]*8 + 245
         self.frame_size = (self.x_frame_size, self.y_frame_size)
 
         # Added Products
