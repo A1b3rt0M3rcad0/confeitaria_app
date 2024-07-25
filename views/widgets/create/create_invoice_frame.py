@@ -23,8 +23,60 @@ class CreateInvoiceFrame(base.BaseFrame):
         self.size_entry = (Config.size_entry[0]+75, Config.size_entry[1])
         self.size_option_menu = (Config.size_option_menu[0]+75, Config.size_option_menu[1])
         self.size_button = Config.size_button
+        self.ingredient_list = Config.width_ingredient_list
+
+        # frame sizes
+        self.x_frame_size = self.size_label[0] + self.size_entry[0] + Config.paddings['entry'][0]*4
+        self.y_frame_size = self.size_label[1]*2 + self.size_entry[1]*2 + self.size_button[1] + Config.paddings['entry'][1]*8 + Config.paddings['button'][1]*2
+        self.frame_size = (self.x_frame_size, self.y_frame_size)
+
+        # Added Products
+        self.added_products = []
 
         # Products
         self.all_products = self.product_controller.select_all()
         __select_recipe = lambda product: self.recipe_controller.select(id=[product.recipe_id])[0]
         self.products = {__select_recipe(product).name: {'id': product.id, 'price': product.price} for product in self.all_products} if len(self.all_products) > 0 else []
+
+        # Client Name
+        self.label_client_name = base.BaseLabel(self, text='Nome:', width=self.size_label[0], height=self.size_label[1])
+        self.label_client_name.grid(row=0, column=0, padx=Config.paddings['message'][0], pady=Config.paddings['message'][1], sticky='w')
+
+        self.entry_client_name = base.BaseEntry(self, placeholder_text='Digite o nome do cliente...', width=self.size_entry[0], height=self.size_entry[1], validate='key', validatecommand=validade_entry_string)
+        self.entry_client_name.grid(row=0, column=0, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1], sticky='e')
+
+        # Client Phone
+        self.label_client_phone = base.BaseLabel(self, text='Telefone:', width=self.size_label[0], height=self.size_label[1])
+        self.label_client_phone.grid(row=1, column=0, padx=Config.paddings['message'][0], pady=Config.paddings['message'][1], sticky='w')
+
+        self.entry_client_phone = base.BaseEntry(self, placeholder_text='Digite o telefone do cliente...', width=self.size_entry[0], height=self.size_entry[1], validate='key', validatecommand=validade_entry_string)
+        self.entry_client_phone.grid(row=1, column=0, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1], sticky='e')
+
+        # Product List
+        self.invoice_products = base.BaseScrollableFrame(self, label_text='Produtos:', width=self.ingredient_list)
+        self.invoice_products.grid(row=2, column=0, rowspan=2, padx=Config.paddings['text'][0], pady=Config.paddings['text'][1])
+
+        # Products
+        self.option_menu_products = base.BaseOptionMenu(self, values = list(self.products.keys()), width=self.size_option_menu[0], height=self.size_option_menu[1], dynamic_resizing=False, command=self.__cost_of_product)
+        self.option_menu_products.grid(row=0, column=2, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1])
+
+        # Products Price
+        self.label_product_price = base.BaseLabel(self, text='Preço:', width=self.size_label[0], height=self.size_label[1])
+        self.label_product_price.grid(row=1, column=2, padx=Config.paddings['message'][0], pady=Config.paddings['message'][1], sticky='w')
+
+        self.__cost_of_product()
+
+        # Button Add Product
+        self.button_add_product = base.BaseButton(self, text="Adicionar Produto", width=self.size_option_menu[0], height=self.size_option_menu[1])
+        self.button_add_product.grid(row=2, column=2, padx=Config.paddings['button'][0], pady=Config.paddings['button'][1], sticky='n')
+
+
+
+    def __cost_of_product(self, *args) -> None:
+        
+        if hasattr(self, 'label_product_price_info'):
+            self.label_product_price_info.destroy()
+
+        product_price = self.products[self.option_menu_products.get()]['price']
+        self.label_product_price_info = base.BaseLabel(self, text=f'R$ {product_price:.2f}', width=self.size_label[0], height=self.size_label[1])
+        self.label_product_price_info.grid(row=1, column=2, padx=Config.paddings['message'][0], pady=Config.paddings['message'][1])
