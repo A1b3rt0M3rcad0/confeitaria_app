@@ -65,7 +65,7 @@ class CreateInvoiceFrame(base.BaseFrame):
         self.label_product_quantity = base.BaseLabel(self, text='Quantidade:', width=self.size_option_menu[0]/2, height=self.size_option_menu[1])
         self.label_product_quantity.grid(row=1, column=2, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1], sticky='w')
 
-        self.product_quantity = base.BaseEntry(self, placeholder_text='123', width=self.size_option_menu[0]/2, height=self.size_option_menu[1], validate='key', validatecommand=validate_entry_int)
+        self.product_quantity = base.BaseEntry(self, placeholder_text='1234', width=self.size_option_menu[0]/2, height=self.size_option_menu[1], validate='key', validatecommand=validate_entry_int)
         self.product_quantity.grid(row=1, column=2, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1], sticky='e')
         
         # Products Price
@@ -75,8 +75,20 @@ class CreateInvoiceFrame(base.BaseFrame):
         self.__cost_of_product()
 
         # Button Add Product
-        self.button_add_product = base.BaseButton(self, text="Adicionar Produto", width=self.size_option_menu[0], height=self.size_option_menu[1])
+        self.button_add_product = base.BaseButton(self, text="Adicionar Produto", width=self.size_option_menu[0], height=self.size_option_menu[1], command=self.__add_product)
         self.button_add_product.grid(row=2, column=2, padx=Config.paddings['button'][0], pady=Config.paddings['button'][1])
+
+        # Products Total Price
+
+        self.__label_products_total_cost()
+
+        # Button Create Invoice
+        self.button_add_product = base.BaseButton(self, text="Criar Fatura", width=self.size_option_menu[0], height=self.size_option_menu[1])
+        self.button_add_product.grid(row=3, column=2, padx=Config.paddings['button'][0], pady=Config.paddings['button'][1], sticky='nw')
+
+        # Button Create and Print Invoice
+        self.button_add_product = base.BaseButton(self, text="Criar/Imprimir Fatura", width=self.size_option_menu[0], height=self.size_option_menu[1])
+        self.button_add_product.grid(row=3, column=2, padx=Config.paddings['button'][0], pady=Config.paddings['button'][1], sticky='w')
 
 
 
@@ -88,3 +100,79 @@ class CreateInvoiceFrame(base.BaseFrame):
         product_price = self.products[self.option_menu_products.get()]['price']
         self.label_product_price_info = base.BaseLabel(self, text=f'R$ {product_price:.2f}', width=self.size_label[0], height=self.size_label[1], anchor='n')
         self.label_product_price_info.grid(row=2, column=2, padx=Config.paddings['message'][0], pady=Config.paddings['message'][1], sticky='n')
+
+    def __label_products_total_cost(self, *args) -> None:
+        if hasattr(self, 'label_product_total_cost_info'):
+            self.label_product_total_cost_info.destroy()
+        if not hasattr(self, 'total_cost'):
+            self.total_cost = 0.0
+        self.label_product_total_cost_info = base.BaseLabel(self, text=f'Total: R${self.total_cost:.2f}', width=self.size_label[0], height=self.size_label[1], anchor='s')
+        self.label_product_total_cost_info.grid(row=2, column=2, padx=Config.paddings['message'][0], pady=Config.paddings['message'][1], sticky='s')
+
+    def __add_product(self, *args) -> None:
+        product_name = self.option_menu_products.get()
+        product = self.products[product_name]
+        product_quantity = self.product_quantity.get()
+
+        if not product_quantity:
+            messagebox.showerror("Erro", "Por favor, insira a quantidade do produto.")
+            return
+
+        # Calculate the cost for the added product
+        cost = float(product_quantity) * product['price']
+
+        # Add product to the list
+        self.added_products.append((product_name, product_quantity, cost))
+
+        # Update total cost
+        self.total_cost += cost
+
+        # Clear the quantity entry field
+        self.product_quantity.delete(0, ctk.END)
+
+        # Update the product list display and total cost label
+        self.__update_product_list()
+        self.__update_total_cost_label()
+
+    def __update_product_list(self) -> None:
+        # Clear the current list
+        for widget in self.invoice_products.winfo_children():
+            widget.destroy()
+
+        # Display each product in the list
+        for index, (name, quantity, cost) in enumerate(self.added_products):
+            result_name = name if len(name) <= 10 else f'{name[0:11]}...'
+            label_text = f"{result_name}: {quantity} - R${cost:.2f}"
+            product_label = base.BaseLabel(self.invoice_products, text=label_text, width=300, anchor='w')
+            product_label.grid(row=index, column=0, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1], sticky='w')
+
+            delete_button = base.BaseButton(self.invoice_products, text="X", width=20, height=20, command=lambda idx=index: self.__delete_product(idx))
+            delete_button.grid(row=index, column=1, padx=Config.paddings['button'][0], pady=Config.paddings['button'][1], sticky='e')
+
+    def __update_total_cost_label(self) -> None:
+        if hasattr(self, 'label_product_total_cost_info'):
+            self.label_product_total_cost_info.destroy()
+        self.__label_products_total_cost()
+
+    def __delete_product(self, index) -> None:
+        # Remove the product cost from total cost
+        self.total_cost -= self.added_products[index][2]
+
+        # Remove the product from the list
+        del self.added_products[index]
+
+        # Update the product list display and total cost label
+        self.__update_product_list()
+        self.__update_total_cost_label()
+
+    def __delete_all_infos(self) -> None:
+        # Reset Products and Cost
+        self.added_products = []
+        self.total_cost = 0
+        # Reset Widgets
+        self.__update_product_list()
+        self.__update_total_cost_label()
+        # Resets Entries
+        self.product_quantity.delete(0, ctk.END)
+        self.entry_client_name.delete(0, ctk.END)
+        self.entry_client_phone.delete(0, ctk.END)

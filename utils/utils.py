@@ -7,7 +7,7 @@ def only_float_number(current_text:str) -> bool:
 
 def only_int_number(char:str, current_text:str) -> bool:
     # Permitir texto vazio, dígitos e ponto decimal se ele não estiver já presente no texto
-    if current_text == "" or current_text.isdigit() or char.isdigit():
+    if (current_text == "" or current_text.isdigit() or char.isdigit()) and len(current_text) <= 4:
         return True
     else:
         return False
