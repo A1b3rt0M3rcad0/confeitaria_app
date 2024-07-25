@@ -143,7 +143,7 @@ class CreateInvoiceFrame(base.BaseFrame):
         for index, (name, quantity, cost) in enumerate(self.added_products):
             result_name = name if len(name) <= 10 else f'{name[0:11]}...'
             label_text = f"{result_name}: {quantity} - R${cost:.2f}"
-            product_label = base.BaseLabel(self.invoice_products, text=label_text, width=300, anchor='w')
+            product_label = base.BaseLabel(self.invoice_products, text=label_text, width=self.size_label[0]+220, anchor='w')
             product_label.grid(row=index, column=0, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1], sticky='w')
 
             delete_button = base.BaseButton(self.invoice_products, text="X", width=20, height=20, command=lambda idx=index: self.__delete_product(idx))
