@@ -40,17 +40,17 @@ class SelectIngredientFrame(base.BaseFrame):
         for widget in self.ingredient_list.winfo_children():
             widget.destroy()
 
-        # Display each product in the list
+        # Display each ingredient in the list
         for index, (name, quantity, unit, price) in enumerate(self.ingredients):
             result_name = name if len(name) <= 10 else f'{name[0:11]}...'
             label_text = f"{index} - {result_name}: {quantity} {unit} - R${price:.2f}"
-            product_label = base.BaseLabel(self.ingredient_list, text=label_text, width=self.size_label[0]+220, anchor='w')
-            product_label.grid(row=index, column=0, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1], sticky='w')
+            ingredient_label = base.BaseLabel(self.ingredient_list, text=label_text, width=self.size_label[0]+220, anchor='w')
+            ingredient_label.grid(row=index, column=0, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1], sticky='w')
 
-            delete_button = base.BaseButton(self.ingredient_list, text="X", width=20, height=20, command=lambda idx=index: self.__delete_product(idx))
+            delete_button = base.BaseButton(self.ingredient_list, text="X", width=20, height=20, command=lambda idx=index: self.__delete_ingredient(idx))
             delete_button.grid(row=index, column=1, padx=Config.paddings['button'][0], pady=Config.paddings['button'][1], sticky='e')
 
-    def __delete_product(self, index) -> None:
+    def __delete_ingredient(self, index) -> None:
 
         self.ingredient_controller.delete(self.ingredient_controller.select(name=[self.ingredients[index][0]])[0])
         messagebox.showinfo('Alerta', f'Ingredient: "{self.ingredients[index][0]}" deletado com sucesso!')
