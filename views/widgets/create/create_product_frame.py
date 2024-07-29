@@ -23,10 +23,6 @@ class CreateProductFrame(base.BaseFrame):
         self.size_option_menu = (Config.size_option_menu[0]+75, Config.size_option_menu[1])
         self.size_button = Config.size_button
 
-        # Recipes
-        self.all_recipes = self.recipe_controller.select_all()
-        self.recipes = {recipe.name: recipe.id for recipe in self.all_recipes} if len(self.all_recipes) > 0 else {'Vazio': None}
-
         # frame sizes
         self.x_frame_size = self.size_label[0] + self.size_entry[0] + Config.paddings['entry'][0]*4
         self.y_frame_size = self.size_label[1]*2 + self.size_entry[1]*2 + self.size_button[1] + Config.paddings['entry'][1]*8 + Config.paddings['button'][1]*2
@@ -36,8 +32,7 @@ class CreateProductFrame(base.BaseFrame):
         self.label_recipe = base.BaseLabel(self, text='Recipe:', width=self.size_label[0], height=self.size_label[1])
         self.label_recipe.grid(row=0, column=0, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1])
 
-        self.option_menu_recipes = base.BaseOptionMenu(self, values = list(self.recipes.keys()), width=self.size_option_menu[0], height=self.size_option_menu[1], dynamic_resizing=False, command=self.__cost_of_recipe)
-        self.option_menu_recipes.grid(row=0, column=1, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1])
+        self.__option_menu_recipes()
 
         # Recipe Price
         self.label_production_cost = base.BaseLabel(self, text='Custo de Produção:', width=self.size_label[0], height=self.size_label[1], anchor='w')
@@ -108,12 +103,34 @@ class CreateProductFrame(base.BaseFrame):
             recipe_id = self.recipes[self.option_menu_recipes.get()]
             product_price = self.entry_product_price.get()
             if product_price:
-                self.product_controller.create(recipe_id=recipe_id, price=product_price)
-                self.entry_product_price.delete(0, ctk.END)
-                self.__expected_profit()
-                messagebox.showinfo('Alerta', 'Produto Criado Com Sucesso!')
+                if len(self.product_controller.select(recipe_id=[recipe_id])) == 0:
+                    self.product_controller.create(recipe_id=recipe_id, price=product_price)
+                    self.entry_product_price.delete(0, ctk.END)
+                    self.__update_frame()
+                    self.__expected_profit()
+                    self.__cost_of_recipe()
+                    messagebox.showinfo('Alerta', 'Produto Criado Com Sucesso!')
+                else:
+                    self.__update_frame()
+                    self.__expected_profit()
+                    self.__cost_of_recipe()
+                    messagebox.showerror('Error', 'Produto Já Criado!') 
             else:
                 messagebox.showerror('Error', 'Digite o preço do produto!')
         else:
             messagebox.showerror('Error', 'Para criar um produto é necessário possuir uma receita')
+    
+    def __recipes(self) -> None:
+        self.all_recipes = self.recipe_controller.select_all()
+        self.recipes = {recipe.name: recipe.id for recipe in self.all_recipes} if len(self.all_recipes) > 0 else {'Vazio': None}
+    
+    def __option_menu_recipes(self) -> None:
+        self.__recipes()
+        if hasattr(self, 'option_menu_recipes'):
+            self.option_menu_recipes.destroy()
+        self.option_menu_recipes = base.BaseOptionMenu(self, values = list(self.recipes.keys()), width=self.size_option_menu[0], height=self.size_option_menu[1], dynamic_resizing=False, command=self.__cost_of_recipe)
+        self.option_menu_recipes.grid(row=0, column=1, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1])
+    
+    def __update_frame(self) -> None:
+        self.__option_menu_recipes()
         
