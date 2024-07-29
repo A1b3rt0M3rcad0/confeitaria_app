@@ -1,5 +1,6 @@
 from views.widgets import base
 from controllers.controllers import RecipeController, IngredientController, RecipeIngredientController
+from views.widgets.create.create_recipe_frame import CreateRecipeFrame
 from config.settings import Config
 from tkinter import messagebox
 
@@ -17,10 +18,10 @@ class SelectRecipeFrame(base.BaseFrame):
         self.size_entry = (Config.size_entry[0]+75, Config.size_entry[1])
         self.size_option_menu = (Config.size_option_menu[0]+75, Config.size_option_menu[1])
         self.size_button = Config.size_button
-        self.ingredient_list = Config.width_ingredient_list
+        self.recipe_list_width = CreateRecipeFrame().frame_size[0] - Config.paddings['entry'][0]*4
 
         # frame sizes
-        self.x_frame_size = self.ingredient_list + Config.paddings['text'][0] * 4
+        self.x_frame_size = self.recipe_list_width + Config.paddings['text'][0] * 4
         self.y_frame_size = 275
         self.frame_size = (self.x_frame_size, self.y_frame_size)
 
@@ -28,7 +29,7 @@ class SelectRecipeFrame(base.BaseFrame):
         self.__recipe_cost()
 
         # Ingredient List
-        self.recipe_list = base.BaseScrollableFrame(self, label_text='Receitas:', width=self.ingredient_list)
+        self.recipe_list = base.BaseScrollableFrame(self, label_text='Receitas:', width=self.recipe_list_width)
         self.recipe_list.grid(row=2, column=0, rowspan=2, padx=Config.paddings['text'][0], pady=Config.paddings['text'][1])
 
         self.__update_recipe_list()
@@ -55,9 +56,9 @@ class SelectRecipeFrame(base.BaseFrame):
 
             # Display each recipe in the list
             for index, (name, cost) in enumerate(self.recipe_cost_list):
-                result_name = name if len(name) <= 15 else f'{name[0:16]}...'
-                label_text = f"{index} - {result_name}: R${cost:.2f}"
-                recipe_label = base.BaseLabel(self.recipe_list, text=label_text, width=self.size_label[0]+220, anchor='w')
+                result_name = name if len(name) <= 29 else f'{name[0:30]}...'
+                label_text = f"{index} - {result_name} - Custo de Produção: R${cost:.2f}"
+                recipe_label = base.BaseLabel(self.recipe_list, text=label_text, width=self.size_label[0]+440, anchor='w')
                 recipe_label.grid(row=index, column=0, padx=Config.paddings['entry'][0], pady=Config.paddings['entry'][1], sticky='w')
 
                 delete_button = base.BaseButton(self.recipe_list, text="X", width=20, height=20, command=lambda idx=index: self.__delete_recipe(idx))
