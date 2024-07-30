@@ -122,7 +122,15 @@ class CreateProductFrame(base.BaseFrame):
     
     def __recipes(self) -> None:
         self.all_recipes = self.recipe_controller.select_all()
-        self.recipes = {recipe.name: recipe.id for recipe in self.all_recipes} if len(self.all_recipes) > 0 else {'Vazio': None}
+        self.recipes = {}
+        for recipe in self.all_recipes:
+            products = self.product_controller.select(recipe_id=[recipe.id])
+            if len(products) > 0:
+                pass
+            else:
+                self.recipes[recipe.name] = recipe.id
+        if len(self.recipes) == 0:
+            self.recipes = {'Vazio': None}
     
     def __option_menu_recipes(self) -> None:
         self.__recipes()
