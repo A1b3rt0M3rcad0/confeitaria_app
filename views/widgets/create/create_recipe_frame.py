@@ -97,21 +97,24 @@ class CreateRecipeFrame(base.BaseFrame):
             messagebox.showerror("Erro", "Por favor, insira a quantidade do ingrediente.")
             return
 
-        # Calculate the cost for the added ingredient
-        cost = float(ingredient_quantity) * ingredient[1] / ingredient[2]
+        try:
+            # Calculate the cost for the added ingredient
+            cost = float(ingredient_quantity) * ingredient[1] / ingredient[2]
 
-        # Add ingredient to the list
-        self.added_ingredients.append((ingredient_name, ingredient_quantity, self.selected_unit, cost))
+            # Add ingredient to the list
+            self.added_ingredients.append((ingredient_name, ingredient_quantity, self.selected_unit, cost))
 
-        # Update total cost
-        self.total_cost += cost
+            # Update total cost
+            self.total_cost += cost
 
-        # Clear the quantity entry field
-        self.entry_ingredient_quantity.delete(0, ctk.END)
+            # Clear the quantity entry field
+            self.entry_ingredient_quantity.delete(0, ctk.END)
 
-        # Update the ingredient list display and total cost label
-        self.__update_ingredient_list()
-        self.__update_total_cost_label()
+            # Update the ingredient list display and total cost label
+            self.__update_ingredient_list()
+            self.__update_total_cost_label()
+        except ZeroDivisionError:
+            pass
 
     def __update_ingredient_list(self) -> None:
         # Clear the current list

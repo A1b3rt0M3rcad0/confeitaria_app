@@ -37,7 +37,10 @@ class SelectProductFrame(base.BaseFrame):
     
 
     def __products(self) -> None:
-        self.products = [(self.recipe_controller.select(id=[product.recipe_id])[0].name, product.price) for product in self.product_controller.select_all()]
+        all_products = self.product_controller.select_all()
+        print('*-*'*500)
+        print(all_products)
+        self.products = [(self.recipe_controller.select(id=[product.recipe_id])[0].name, product.price) for product in all_products]
     
     def __recipe_cost(self) -> None:
         self.recipes = [(recipe.id, recipe.name) for recipe in self.recipe_controller.select_all()]

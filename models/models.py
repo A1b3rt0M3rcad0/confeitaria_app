@@ -61,8 +61,8 @@ class RecipeIngredient(Base):
     __tablename__ = 'recipe_ingredient'
 
     id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
-    ingredient_id:Mapped[int] = mapped_column(ForeignKey("ingredient.id"), nullable=False)
-    recipe_id:Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=False)
+    ingredient_id:Mapped[int] = mapped_column(ForeignKey("ingredient.id", ondelete='CASCADE'), nullable=False)
+    recipe_id:Mapped[int] = mapped_column(ForeignKey("recipe.id", ondelete='CASCADE'), nullable=False)
     quantity:Mapped[float] = mapped_column(Float, nullable=False)
 
     # Relations
@@ -74,7 +74,7 @@ class Product(Base):
     __tablename__ = 'product'
 
     id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
-    recipe_id = mapped_column(ForeignKey("recipe.id"), unique=True,  nullable=False)
+    recipe_id = mapped_column(ForeignKey("recipe.id", ondelete='CASCADE'), unique=True,  nullable=False)
     price:Mapped[float] = mapped_column(Float, nullable=False)
     created_at:Mapped[Date] = mapped_column(Date, default=func.current_date(), nullable=False, onupdate=func.current_date())
 
@@ -101,8 +101,8 @@ class ProductInvoice(Base):
     __tablename__ = 'product_invoice'
 
     id:Mapped[int] = mapped_column(primary_key=True, nullable=False)
-    product_id:Mapped[int] = mapped_column(ForeignKey("product.id"), nullable=False)
-    invoice_id:Mapped[int] = mapped_column(ForeignKey("invoice.id"), nullable=False)
+    product_id:Mapped[int] = mapped_column(ForeignKey("product.id", ondelete='CASCADE'), nullable=False)
+    invoice_id:Mapped[int] = mapped_column(ForeignKey("invoice.id", ondelete='CASCADE'), nullable=False)
     quantity:Mapped[float] = mapped_column(Integer, nullable=False)
 
     ## Relations
